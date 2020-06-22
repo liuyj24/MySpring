@@ -4,9 +4,11 @@ package com.liuyj.service.solo.impl;
 import com.liuyj.entity.bo.HeadLine;
 import com.liuyj.entity.dto.Result;
 import com.liuyj.service.solo.HeadLineService;
+import org.simpleframework.core.annotation.Service;
 
 import java.util.List;
 
+@Service
 public class HeadLineServiceImpl implements HeadLineService {
     @Override
     public Result<Boolean> addHeadLine(HeadLine headLine) {
