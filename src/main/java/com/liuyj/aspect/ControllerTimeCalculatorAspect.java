@@ -13,7 +13,7 @@ import java.lang.reflect.Method;
  */
 @Slf4j
 @Order(0)
-@Aspect(value = Controller.class)
+@Aspect(pointcut = "execution(* com.liuyj.controller.frontend..*.*(..))")
 public class ControllerTimeCalculatorAspect extends DefaultAspect {
 
     private long timeStampCache;

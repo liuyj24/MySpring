@@ -10,7 +10,7 @@ import java.lang.reflect.Method;
 
 @Slf4j
 @Order(10)
-@Aspect(value = Controller.class)
+@Aspect(pointcut = "within(com.liuyj.controller.supermain.*)")
 public class ControllerInfoRecordAspect extends DefaultAspect {
 
     @Override

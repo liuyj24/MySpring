@@ -3,11 +3,13 @@ package org.simpleframework.aop;
 import lombok.Getter;
 import net.sf.cglib.proxy.MethodInterceptor;
 import net.sf.cglib.proxy.MethodProxy;
+import org.simpleframework.aop.annotation.Aspect;
 import org.simpleframework.aop.aspect.AspectInfo;
 
 import java.lang.reflect.Method;
 import java.util.Collections;
 import java.util.Comparator;
+import java.util.Iterator;
 import java.util.List;
 
 public class AspectListExecutor implements MethodInterceptor {
@@ -42,7 +44,10 @@ public class AspectListExecutor implements MethodInterceptor {
     @Override
     public Object intercept(Object proxy, Method method, Object[] args, MethodProxy methodProxy) throws Throwable {
         Object returnValue = null;
+        collectAccurateMatchedAspectList(method);
         if(sortedAspectInfoList == null || sortedAspectInfoList.isEmpty()){
+            //执行被代理方法（即便没有织入逻辑也要执行）
+            returnValue = methodProxy.invokeSuper(proxy, args);
             return returnValue;
         }
         //1. 按照order的顺序升序执行完所有Aspect的before方法
@@ -57,6 +62,23 @@ public class AspectListExecutor implements MethodInterceptor {
             invokeAfterThrowingAdvice(method, args, e);
         }
         return returnValue;
+    }
+
+    /**
+     * 根据sortedAspectInfoList对代理方法进行精筛
+     * @param method
+     */
+    private void collectAccurateMatchedAspectList(Method method) {
+        if(null == sortedAspectInfoList || sortedAspectInfoList.isEmpty()){
+            return;
+        }
+        Iterator<AspectInfo> iterator = sortedAspectInfoList.iterator();
+        while(iterator.hasNext()){
+            AspectInfo aspectInfo = iterator.next();
+            if(!aspectInfo.getPointcutLocator().accurateMatches(method)){
+                iterator.remove();
+            }
+        }
     }
 
     /**
