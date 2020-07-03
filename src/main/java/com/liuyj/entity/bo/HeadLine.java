@@ -1,15 +1,13 @@
 package com.liuyj.entity.bo;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.Data;
 
 import java.util.Date;
 
 /**
  * 商店首页头条实体类
  */
-@Getter
-@Setter
+@Data
 public class HeadLine {
     private Long lineId;
     private String lineName;
